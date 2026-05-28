@@ -1,7 +1,7 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
-# ── Existing Post-Transaction Schema (unchanged) ──────────────────────────────
+# ── Post-Transaction (Analyst single) ────────────────────────────────────────
 class Transaction(BaseModel):
     category: str
     amt: float
@@ -17,20 +17,38 @@ class PredictionResult(BaseModel):
     is_fraud: bool
     probability: float
 
-# ── NEW: Pre-Transaction Schema (customer-friendly fields) ────────────────────
+# ── Pre-Transaction (Customer) ────────────────────────────────────────────────
 class PreRiskInput(BaseModel):
-    amount: float                 # Transaction Amount
-    merchant_name: str            # Merchant Name
-    merchant_category: str        # Merchant Category
-    payment_method: str           # credit_card / debit_card / upi / netbanking
-    city: str                     # Transaction City
-    is_international: bool        # International transaction?
-    is_new_merchant: bool         # First time with this merchant?
+    amount: float
+    merchant_name: str
+    merchant_category: str
+    payment_method: str
+    city: str
+    is_international: bool
+    is_new_merchant: bool
 
 class PreRiskResult(BaseModel):
     probability: float
-    risk_score: float             # 0-100
-    risk_level: str               # Low / Medium / High
+    risk_score: float
+    risk_level: str
     is_fraud: bool
     message: str
     reasons: List[str]
+
+# ── Batch Upload Result ───────────────────────────────────────────────────────
+class BatchRowResult(BaseModel):
+    row_index: int
+    merchant: str
+    category: str
+    amt: float
+    trans_date_trans_time: str
+    is_fraud: bool
+    probability: float
+    risk_level: str
+
+class BatchResult(BaseModel):
+    total: int
+    fraud_count: int
+    safe_count: int
+    fraud_rate: float
+    results: List[BatchRowResult]
