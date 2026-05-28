@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-const BASE_URL = 'https://fraud-detection-frontend-lasn.onrender.com'
+const BASE_URL = 'https://fraud-detection-backend-omgy.onrender.com'
 
 export const predictFraud   = async (data) => (await axios.post(`${BASE_URL}/predict`, data)).data
 export const preRiskCheck   = async (data) => (await axios.post(`${BASE_URL}/pre-risk-check`, data)).data
